@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chicken, Spinach & Tomato Penne</title>
+<style>
+:root{--bg:#fbf8f4;--fg:#2a2326;--accent:#843c6c;--line:#d9cfc6;--card:#fff;--muted:#6b5f64;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d1a1c;--fg:#efe8ec;--accent:#d594bf;--line:#473f44;--card:#272325;--muted:#b3a7ae}}
+:root[data-theme="dark"]{--bg:#1d1a1c;--fg:#efe8ec;--accent:#d594bf;--line:#473f44;--card:#272325;--muted:#b3a7ae}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.55 Georgia,"Times New Roman",serif}
+main{max-width:960px;margin:0 auto;padding:20px 18px 40px}
+h1{color:var(--accent);margin:0 0 4px;font-size:1.8rem}
+h2{color:var(--accent);font-size:1.4rem;margin:0 0 10px}
+.sub{color:var(--muted);margin:0 0 18px}
+.grid{display:grid;grid-template-columns:1fr;gap:28px}
+@media(min-width:760px){.grid{grid-template-columns:5fr 7fr}}
+ul{list-style:none;margin:0;padding:0}
+li{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+li input{margin-top:6px;width:18px;height:18px;flex:none}
+li.done span{opacity:.5;text-decoration:line-through}
+ol{padding-left:22px;margin:0}
+ol li{display:list-item;border:0;padding:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-top:26px}
+.card h3{margin:0 0 8px;color:var(--accent)}
+.card ol li{padding-bottom:8px}
+button{font:inherit;background:var(--accent);color:var(--bg);border:0;border-radius:8px;padding:9px 16px;cursor:pointer;margin-top:18px}
+#msg{margin-left:10px;color:var(--muted);font-size:.9rem}
+</style>
+</head>
+<body>
+<main>
+<h1>Chicken, Spinach &amp; Tomato Penne</h1>
+<p class="sub">Alcohol-free, no-juice version</p>
+<div class="grid">
+<section>
+<h2>Ingredients</h2>
+<ul id="ings"></ul>
+</section>
+<section>
+<h2>Directions</h2>
+<ol id="steps"></ol>
+</section>
+</div>
+<div class="card">
+<h3>Wine substitute options (pick one, 3/4 cup total)</h3>
+<ol id="subs"></ol>
+</div>
+<button id="dl" type="button">Download recipe (.txt)</button><span id="msg"></span>
+</main>
+<script>
+var ING=[
+"1 lb. Penne",
+"4 whole Boneless, Skinless Chicken Breasts",
+"Salt and Pepper, to taste",
+"2 Tbsp. Butter",
+"2 Tbsp. Olive Oil",
+"4 cloves Garlic, Minced",
+"3/4 cup White Wine (see options below)",
+"3/4 cup Low-sodium Broth, More If Needed",
+"1 bag Baby Spinach",
+"2 cups Cherry Tomatoes, Halved Lengthwise",
+"4 oz. ground Parmesan Cheese"];
+var STEPS=[
+"Cook pasta according to package directions in lightly salted water. Drain and set aside.",
+"Cut chicken breasts into chunks and sprinkle on salt and pepper.",
+"Heat butter and olive oil over high heat in a large skillet. Add chicken chunks in a single layer and do not stir for a minute or two in order to allow the chicken to brown on the first side. Turn the chicken and brown on the other side. Cook until done, then remove chicken from the skillet.",
+"Turn heat to medium. Add garlic and quickly stir to avoid burning. After about 30 seconds, pour in the wine substitute and broth, stirring to deglaze the pan. Allow the liquid to bubble up, then continue cooking until it's reduced by at least half (most of the surface of the liquid should be bubbling at this point.)",
+"Turn off the heat. Add spinach, tomatoes, chicken, and cooked pasta to the skillet. Toss to combine; the spinach will wilt as you toss everything. Add plenty of shredded Parmesan and toss to combine."];
+var SUBS=[
+"<b>Extra broth + white vinegar:</b> 3/4 cup more low-sodium broth plus 1 Tbsp white vinegar (or apple cider vinegar). Closest to the tang of wine.",
+"<b>Water + vinegar + sugar:</b> 3/4 cup water, 1 Tbsp white vinegar, and 1/2 tsp sugar. Use if you're short on broth.",
+"<b>Pasta water + vinegar:</b> 3/4 cup of the starchy pasta cooking water plus 1 tsp white vinegar. Adds body to the sauce; go easy on added salt.",
+"<b>Plain extra broth:</b> 3/4 cup more low-sodium broth, nothing else. Simplest and mildest; add a little extra Parmesan at the end."];
+function esc(s){return s.replace(/[&<>]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c]})}
+document.getElementById("ings").innerHTML=ING.map(function(t){return '<li><input type="checkbox"><span>'+esc(t)+'</span></li>'}).join("");
+document.getElementById("steps").innerHTML=STEPS.map(function(t){return '<li>'+esc(t)+'</li>'}).join("");
+document.getElementById("subs").innerHTML=SUBS.map(function(t){return '<li>'+t+'</li>'}).join("");
+document.getElementById("ings").addEventListener("change",function(e){e.target.parentNode.classList.toggle("done",e.target.checked)});
+function strip(s){return s.replace(/<[^>]+>/g,"")}
+var dl=document.getElementById("dl"),msg=document.getElementById("msg");
+dl.addEventListener("click",async function(){
+  var txt="CHICKEN, SPINACH & TOMATO PENNE\n\nINGREDIENTS\n"+ING.map(function(t){return "- "+t}).join("\n")+
+   "\n\nDIRECTIONS\n"+STEPS.map(function(t,i){return (i+1)+". "+t}).join("\n\n")+
+   "\n\nWINE SUBSTITUTE OPTIONS (pick one, 3/4 cup total)\n"+SUBS.map(function(t,i){return (i+1)+". "+strip(t)}).join("\n")+"\n";
+  try{
+    var d=await window.claude.use("downloads");
+    if(!d){msg.textContent="Downloads unavailable in this view.";return}
+    await d.save({filename:"chicken-spinach-penne.txt",data:txt});
+    msg.textContent="Saved.";
+  }catch(e){msg.textContent=(e&&e.code==="declined")?"":"Couldn't save the file."}
+});
+</script>
+</body>
+</html>
